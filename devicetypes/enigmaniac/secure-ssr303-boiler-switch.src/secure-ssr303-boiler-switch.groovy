@@ -56,16 +56,27 @@ metadata {
 */
 	// tile definitions
 	tiles(scale: 2) {
-		standardTile("onff", "device.switch", width: 6, height: 4, canChangeIcon: true) {
-            state "off", label: 'Idle', action:"switch.on", icon:"st.switches.switch.off", backgroundColor:"#ffffff", nextState:"turningOn"
-            state "on", label: 'Heating', action:"switch.off", icon:"st.switches.switch.on", backgroundColor:"#79b821", nextState:"turningOff"
-            state "turningOn", label: 'Turning on Heat', icon:"st.switches.switch.on", backgroundColor:"#00a0dc", nextState: "turningOff"
-            state "turningOff", label: 'Going Idle', icon:"st.switches.switch.off", backgroundColor:"#ffffff", nextState: "turningOn"
-//				attributeState "on", label: '${name}', action: "switch.off", icon: "st.switches.switch.on", backgroundColor: "#79b821"
-//				attributeState "off", label: '${name}', action: "switch.on", icon: "st.switches.switch.off", backgroundColor: "#ffffff"
 
+multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4, canChangeIcon: true){
+			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
+				attributeState "on", label: 'Heating', action: "switch.off", icon: "st.switches.switch.on", backgroundColor: "#aa2222"
+				attributeState "off", label: 'Eco Mode', action: "switch.on", icon: "st.switches.switch.off", backgroundColor: "#cce6ff"
+			}
 		}
 
+
+/*
+multiAttributeTile(name:"onff", type:"lighting", width: 6, height: 4, canChangeIcon: true) {
+            tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
+                attributeState "off", label: 'Idle', action:"switch.on", icon:"st.switches.switch.off", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "on", label: 'Heating', action:"switch.off", icon:"st.switches.switch.on", backgroundColor:"#79b821", nextState:"turningOff"
+    //            attributeState "turningOn", label: 'Turning on Heat', icon:"st.switches.switch.on", backgroundColor:"#00a0dc", nextState: "turningOff"
+    //            attributeState "turningOff", label: 'Going Idle', icon:"st.switches.switch.off", backgroundColor:"#ffffff", nextState: "turningOn"
+    //				attributeState "on", label: '${name}', action: "switch.off", icon: "st.switches.switch.on", backgroundColor: "#79b821"
+    //				attributeState "off", label: '${name}', action: "switch.on", icon: "st.switches.switch.off", backgroundColor: "#ffffff"
+			}
+		}
+*/
 /*
 		standardTile("indicator", "device.indicatorStatus", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
 			state "when off", action:"indicator.indicatorWhenOn", icon:"st.indicators.lit-when-off"
@@ -159,16 +170,16 @@ def zwaveEvent(physicalgraph.zwave.Command cmd) {
 
 def on() {
 	delayBetween([
-		zwave.switchBinaryV1.switchBinarySet(value: 0xFF).format(),
+		zwave.switchBinaryV1.switchBinarySet(switchValue: 0xFF).format(),
 		zwave.switchBinaryV1.switchBinaryGet().format()
-	], 200)
+	], 100)
 }
 
 def off() {
 	delayBetween([
-		zwave.switchBinaryV1.switchBinarySet(value: 0x00).format(),
+		zwave.switchBinaryV1.switchBinarySet(switchValue: 0x00).format(),
 		zwave.switchBinaryV1.switchBinaryGet().format()
-	], 200)
+	], 100)
 }
 
 /*
